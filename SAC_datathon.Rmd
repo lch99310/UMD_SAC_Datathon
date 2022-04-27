@@ -1,0 +1,199 @@
+---
+title: "SAC_datathon"
+author: "Chung-Hao Lee"
+date: "4/20/2022"
+output: html_document
+---
+
+```{r}
+library("dplyr")
+library("readr")
+library("ggplot2")
+library("lubridate")
+```
+
+```{r}
+df_sales = read_csv("1Million_Sales_cleaned.csv")
+df_sales_us = read_csv("sales_cleaned_us.csv")
+df_sales_gb = read_csv("sales_cleaned_gb.csv")
+df_sales_au = read_csv("sales_cleaned_au.csv")
+df_sales_ca = read_csv("sales_cleaned_ca.csv")
+df_sales_de = read_csv("sales_cleaned_de.csv")
+```
+
+```{r}
+daily_revenue_us <- 
+  df_sales_us %>% 
+  group_by(Sales_Date) %>% 
+  summarise(daily_paid = sum(commission),
+            count = n()) %>% 
+  mutate(sales_date = as.Date(Sales_Date, "%m/%d/%y"),
+         weekday = wday(sales_date, label = TRUE)) %>% 
+  arrange(sales_date)
+
+daily_revenue_ca <- 
+  df_sales_ca %>% 
+  group_by(Sales_Date) %>% 
+  summarise(daily_paid = sum(commission),
+            count = n()) %>% 
+  mutate(sales_date = as.Date(Sales_Date, "%m/%d/%y"),
+         weekday = wday(sales_date, label = TRUE)) %>% 
+  arrange(sales_date) 
+
+daily_revenue_gb <- 
+  df_sales_gb %>% 
+  group_by(Sales_Date) %>% 
+  summarise(daily_paid = sum(commission),
+            count = n()) %>% 
+  mutate(sales_date = as.Date(Sales_Date, "%m/%d/%y"),
+         weekday = wday(sales_date, label = TRUE)) %>% 
+  arrange(sales_date)
+
+daily_revenue_de <- 
+  df_sales_de %>% 
+  group_by(Sales_Date) %>% 
+  summarise(daily_paid = sum(commission),
+            count = n()) %>% 
+  mutate(sales_date = as.Date(Sales_Date, "%m/%d/%y"),
+         weekday = wday(sales_date, label = TRUE)) %>% 
+  arrange(sales_date) 
+
+daily_revenue_au <- 
+  df_sales_au %>% 
+  group_by(Sales_Date) %>% 
+  summarise(daily_paid = sum(commission),
+            count = n()) %>% 
+  mutate(sales_date = as.Date(Sales_Date, "%m/%d/%y"),
+         weekday = wday(sales_date, label = TRUE)) %>% 
+  arrange(sales_date) 
+```
+
+```{r}
+daily_revenue_us %>% 
+  ggplot()+
+  geom_line(mapping = aes(x = sales_date, y = daily_paid))+
+  labs(title = "US")
+
+daily_revenue_ca %>% 
+  ggplot()+
+  geom_line(mapping = aes(x = sales_date, y = daily_paid))+
+  labs(title = "Canada")
+
+daily_revenue_au %>% 
+  ggplot()+
+  geom_line(mapping = aes(x = sales_date, y = daily_paid))+
+  labs(title = "Australia")
+
+daily_revenue_de %>% 
+  ggplot()+
+  geom_line(mapping = aes(x = sales_date, y = daily_paid))+
+  labs(title = "Germany")
+
+daily_revenue_gb %>% 
+  ggplot()+
+  geom_line(mapping = aes(x = sales_date, y = daily_paid))+
+  labs(title = "UK")
+```
+
+
+```{r}
+wday_rev_us <- 
+  daily_revenue_us %>% 
+  filter(sales_date != c('2020-09-09')) %>% 
+  group_by(weekday) %>% 
+  summarise(wday_paid = sum(daily_paid)) 
+
+wday_rev_ca <- 
+  daily_revenue_ca %>% 
+  filter(sales_date != c('2020-09-09')) %>% 
+  group_by(weekday) %>% 
+  summarise(wday_paid = sum(daily_paid)) 
+
+wday_rev_au <- 
+  daily_revenue_au %>% 
+  filter(sales_date != c('2020-09-09')) %>% 
+  group_by(weekday) %>% 
+  summarise(wday_paid = sum(daily_paid)) 
+
+wday_rev_gb <- 
+  daily_revenue_gb %>% 
+  filter(sales_date != c('2020-09-09')) %>% 
+  group_by(weekday) %>% 
+  summarise(wday_paid = sum(daily_paid)) 
+
+wday_rev_de <- 
+  daily_revenue_de %>% 
+  filter(sales_date != c('2020-09-09')) %>% 
+  group_by(weekday) %>% 
+  summarise(wday_paid = sum(daily_paid)) 
+
+```
+
+
+```{r}
+wday_rev_us %>% 
+  ggplot()+
+  geom_col(mapping = aes(x = weekday, y = wday_paid), fill = "#1a3b32")+
+  labs(title = "USA", y = "Sales (USD)")+
+  ggthemes::theme_hc()+
+  theme(axis.title.x=element_blank(),plot.title = element_text(hjust = 0.5))
+
+wday_rev_ca %>% 
+  ggplot()+
+  geom_col(mapping = aes(x = weekday, y = wday_paid), fill = "#1a3b32")+
+  labs(title = "Canada", y = "Sales (USD)")+
+  ggthemes::theme_hc()+
+  theme(axis.title.x=element_blank(),plot.title = element_text(hjust = 0.5))
+
+wday_rev_gb %>% 
+  ggplot()+
+  geom_col(mapping = aes(x = weekday, y = wday_paid), fill = "#1a3b32")+
+  labs(title = "UK", y = "Sales (USD)")+
+  ggthemes::theme_hc()+
+  theme(axis.title.x=element_blank(),plot.title = element_text(hjust = 0.5))
+
+wday_rev_de %>% 
+  ggplot()+
+  geom_col(mapping = aes(x = weekday, y = wday_paid), fill = "#1a3b32")+
+  labs(title = "Germany", y = "Sales (USD)")+
+  ggthemes::theme_hc()+
+  theme(axis.title.x=element_blank(),plot.title = element_text(hjust = 0.5))
+
+wday_rev_au %>% 
+  ggplot()+
+  geom_col(mapping = aes(x = weekday, y = wday_paid), fill = "#1a3b32")+
+  labs(title = "Australia", y = "Sales (USD)")+
+  ggthemes::theme_hc()+
+  theme(axis.title.x=element_blank(),plot.title = element_text(hjust = 0.5))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
