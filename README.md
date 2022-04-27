@@ -11,6 +11,7 @@
 ### Source code
 
 * See [Revenue Projection](https://github.com/lch99310/UMD_SAC_Datathon/blob/main/Revenue%20Projection.xlsx)
+* See [Tableau Dashboard](https://public.tableau.com/app/profile/wang.han.li7991/viz/SADDatathon-Team8/UndervaluedItemDashboard)
 
 ## Authors
 
